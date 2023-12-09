@@ -2,6 +2,7 @@ package com.example.agendapersistencia;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Referencias a objetos de la View
         Button saveButton = (Button) findViewById(R.id.button);
+        Button contactBtn = (Button) findViewById(R.id.btnContacts);
+
         EditText editTextName = (EditText) findViewById(R.id.editTextName);
         EditText editTextSurname = (EditText) findViewById(R.id.editTextSurname);
         EditText editTextPhone = (EditText) findViewById(R.id.editTextNumber);
@@ -54,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
 
                         try {
                             fos.write(text_original.toString().getBytes());
-                            fos.write("\n".getBytes()); // Add a newline as a separator
-                            fos.close(); // Close the stream to save changes
+                            fos.write("\n".getBytes());
+                            fos.close();
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
@@ -63,6 +67,23 @@ public class MainActivity extends AppCompatActivity {
                         throw new RuntimeException(e);
                     }
                 }
+            }
+        });
+
+        contactBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                File contactsFile = new File(getApplicationContext().getFilesDir(), "contactes.txt");
+
+                if (!contactsFile.exists())  {
+                    Toast toast = Toast.makeText(getApplicationContext(), "There are still no saved contacts!", Toast.LENGTH_SHORT);
+                    toast.show();
+                } else {
+                    Log.i("Info", "cambio de vista");
+                    Intent intent = new Intent(MainActivity.this, ContactsActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
     }
